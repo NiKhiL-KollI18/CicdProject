@@ -43,15 +43,18 @@ jobs:
 
       # In .github/workflows/main_ci.yml
 
+      # .github/workflows/main_ci.yml
+# ...
+
       - name: Build and push Frontend image
         uses: docker/build-push-action@v4
         with:
-          # Set the context to the ROOT of the repository
-          context: ./FrontEnd
+          # Context for the renamed frontend folder
+          context: ./FrontEnd 
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-frontend:latest
-          # Specify the full, explicit path from the repository root
-          file: ./FrontEnd/Dockerfile # Using the verified all-lowercase filename
+          # CRITICAL FIX: Explicitly specify the all-lowercase filename
+          file: ./FrontEnd/dockerfile
 
   deploy:
     runs-on: self-hosted
