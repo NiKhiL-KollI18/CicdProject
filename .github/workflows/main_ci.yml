@@ -43,16 +43,22 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-backend:latest
           file: ./CIcdProject/BackEnd/Dockerfile 
+      
+      # --- CRITICAL FIX: RENAME STEP ---
+      - name: Simplify Frontend Folder Name
+        run: |
+          mv ./CIcdProject/FileSharingSystem_FrontEnd-main ./CIcdProject/Frontend
+          ls -R ./CIcdProject # Optional: list files to verify rename
 
       # --- Build Frontend ---
       - name: Build and push Frontend image
         uses: docker/build-push-action@v4
         with:
-          # Correct context for the frontend folder
-          context: ./CIcdProject/FileSharingSystem_FrontEnd-main 
+          # Use the new, clean folder name
+          context: ./CIcdProject/Frontend
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-frontend:latest
-          file: ./CIcdProject/FileSharingSystem_FrontEnd-main/Dockerfile
+          file: ./CIcdProject/Frontend/Dockerfile
 
   deploy: # <--- CRITICAL FIX: This job must align with 'build-and-push'
     runs-on: self-hosted
