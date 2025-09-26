@@ -1,5 +1,5 @@
 # .github/workflows/main_ci.yml
-name: Full-Stack CI/CD - v2
+name: Full-Stack CI/CD - v3
 
 on:
   push:
