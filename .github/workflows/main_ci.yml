@@ -48,7 +48,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-frontend:latest
           # Explicitly specify the case-sensitive path to the Dockerfile
-          file: ./FrontEnd/Dockerfile
+          file: ./FrontEnd/dockerfile
 
   deploy:
     runs-on: self-hosted
