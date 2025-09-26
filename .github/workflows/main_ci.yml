@@ -34,21 +34,21 @@ jobs:
       - name: Build and push Backend image
         uses: docker/build-push-action@v4
         with:
-          # Use the repository root as the context
-          context: . 
+          # Set the context to the backend's folder. 
+          # This allows the COPY target/... command in the Dockerfile to work.
+          context: ./BackEnd 
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-backend:latest
-          # Specify the Dockerfile path relative to the context (the root)
-          file: ./BackEnd/Dockerfile
+          file: ./BackEnd/Dockerfile 
 
+      # --- BUILD AND PUSH FRONTEND IMAGE ---
       - name: Build and push Frontend image
         uses: docker/build-push-action@v4
         with:
-          # Use the repository root as the context
-          context: . 
+          # Use the corrected folder name from your VS Code structure:
+          context: ./FileSharingSystem_FrontEnd-main 
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-frontend:latest
-          # Specify the Dockerfile path relative to the context (the root)
           file: ./FileSharingSystem_FrontEnd-main/Dockerfile
 
   deploy:
