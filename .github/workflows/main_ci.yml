@@ -42,11 +42,12 @@ jobs:
       - name: Build and push Frontend image
         uses: docker/build-push-action@v4
         with:
-          # Context for the renamed frontend folder
-          context: ./FrontEnd 
+          # Set context to the root of the repository
+          context: . 
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-frontend:latest
-          file: ./FrontEnd/Dockerfile # Dockerfile is inside the FrontEnd folder
+          # Provide the full path to the file from the root
+          file: ./FrontEnd/Dockerfile
 
   deploy:
     runs-on: self-hosted
