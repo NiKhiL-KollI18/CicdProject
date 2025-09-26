@@ -35,7 +35,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           # Context and file paths relative to the checked-out folder
-          context: ./CIcdProject/BackEnd 
+          context: ./BackEnd 
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-backend:latest
           file: ./BackEnd/Dockerfile 
