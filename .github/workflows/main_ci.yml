@@ -11,16 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3 
+        uses: actions/checkout@v3
 
-      # --- Login Step (Must be here for security) ---
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           
-      # --- Build Backend ---
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -29,40 +27,41 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
+        # Assumes BackEnd/pom.xml is at the root of the checked-out repo
         run: mvn -f ./BackEnd/pom.xml clean install -DskipTests
 
       - name: Build and push Backend image
         uses: docker/build-push-action@v4
         with:
-          # Context and file paths relative to the checked-out folder
+          # Context for the backend folder
           context: ./BackEnd 
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-backend:latest
           file: ./BackEnd/Dockerfile 
-      
-      # --- CRITICAL FIX: RENAME STEP ---
-      - name: Simplify Frontend Folder Name
-        run: |
-          mv ./FileSharingSystem_FrontEnd-main ./Frontend
 
-      # --- Build Frontend ---
       - name: Build and push Frontend image
         uses: docker/build-push-action@v4
         with:
-          # Use the new, clean folder name
-          context: ./Frontend
+          # Context for the renamed frontend folder
+          context: ./FrontEnd 
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-frontend:latest
-          file: ./Frontend/Dockerfile 
+          file: ./FrontEnd/Dockerfile # Dockerfile is inside the FrontEnd folder
 
-  deploy: # <--- CRITICAL FIX: This job must align with 'build-and-push'
+  deploy:
     runs-on: self-hosted
     needs: build-and-push
     steps:
+      # CRITICAL: Checkout code again to get the latest docker-compose.yml on the server
+      - name: Checkout code on Server
+        uses: actions/checkout@v3
+        
       - name: Pull and run Docker Compose
         run: |
-          # The entire repo is checked out into CIcdProject
-          cd /path/to/your/deployment_root/CIcdProject
+          # Change the directory to the root where BackEnd and FrontEnd sit
+          # The entire repository is checked out into the runner's workspace root
+          
+          # The build names must match the service names in docker-compose.yml
           docker-compose pull
           docker-compose down
           docker-compose up -d
