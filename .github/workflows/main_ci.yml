@@ -39,14 +39,15 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-backend:latest
           file: ./BackEnd/Dockerfile 
 
+      # .github/workflows/main_ci.yml
+
       - name: Build and push Frontend image
         uses: docker/build-push-action@v4
         with:
-          # Set context to the root of the repository
-          context: . 
+          context: . # Use the entire repo root as context
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-frontend:latest
-          # Provide the full path to the file from the root
+          # Explicitly specify the case-sensitive path to the Dockerfile
           file: ./FrontEnd/Dockerfile
 
   deploy:
