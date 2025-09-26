@@ -34,19 +34,21 @@ jobs:
       - name: Build and push Backend image
         uses: docker/build-push-action@v4
         with:
-          context: ./BackEnd
+          # Use the repository root as the context
+          context: . 
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-backend:latest
+          # Specify the Dockerfile path relative to the context (the root)
           file: ./BackEnd/Dockerfile
 
       - name: Build and push Frontend image
         uses: docker/build-push-action@v4
         with:
-          # CORRECTED CONTEXT PATH
-          context: ./FileSharingSystem_FrontEnd-main 
+          # Use the repository root as the context
+          context: . 
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-frontend:latest
-          # CORRECTED DOCKERFILE PATH
+          # Specify the Dockerfile path relative to the context (the root)
           file: ./FileSharingSystem_FrontEnd-main/Dockerfile
 
   deploy:
