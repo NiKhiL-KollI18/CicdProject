@@ -1,14 +1,32 @@
-# Use an official Java runtime as the base image
-FROM openjdk:21-jdk-slim
+# STAGE 1: Build the application with Maven
+FROM maven:3.8.5-openjdk-21 AS build
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the pre-built JAR file from your target folder
-COPY target/BackEnd-0.0.1-SNAPSHOT.jar /app/app.jar
+# Copy the Maven project file first to leverage Docker's dependency caching
+COPY pom.xml .
 
-# Expose the port your Spring Boot app listens on
+# Copy the entire backend source code
+# This is the crucial step that ensures your new files (like WebConfig.java) are included
+COPY src ./src
+
+# Run the Maven build to create the JAR file.
+# This now runs on the fresh source code we just copied.
+RUN mvn clean install -DskipTests
+
+
+# STAGE 2: Create the final, lightweight image
+FROM openjdk:21-slim
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the compiled JAR file from the 'build' stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Expose the port the application runs on
 EXPOSE 8082
 
-# Define the command to run the application
+# The command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]

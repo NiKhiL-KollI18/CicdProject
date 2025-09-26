@@ -4,6 +4,8 @@ import com.FSP.BackEnd.model.UserEntity;
 import com.FSP.BackEnd.service.UserService;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
+
+@CrossOrigin(origins = "*") // <-- THE FIX: Add this line
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -28,4 +30,5 @@ public class AuthController {
                 .map(u -> Map.of("status", "success", "message", "Login successful!"))
                 .orElse(Map.of("status", "error", "message", "Invalid email or password"));
     }
-   }
+}
+
