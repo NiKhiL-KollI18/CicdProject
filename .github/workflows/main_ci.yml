@@ -11,10 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          # Check out repository into a specific folder to handle paths
-          path: CIcdProject 
+        uses: actions/checkout@v3 
 
       # --- Login Step (Must be here for security) ---
       - name: Log in to Docker Hub
@@ -32,8 +29,7 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        # Path to pom.xml relative to the checked-out folder
-        run: mvn -f ./CIcdProject/BackEnd/pom.xml clean install -DskipTests
+        run: mvn -f ./BackEnd/pom.xml clean install -DskipTests
 
       - name: Build and push Backend image
         uses: docker/build-push-action@v4
@@ -47,18 +43,17 @@ jobs:
       # --- CRITICAL FIX: RENAME STEP ---
       - name: Simplify Frontend Folder Name
         run: |
-          mv ./CIcdProject/FileSharingSystem_FrontEnd-main ./CIcdProject/Frontend
-          ls -R ./CIcdProject # Optional: list files to verify rename
+          mv ./FileSharingSystem_FrontEnd-main ./Frontend
 
       # --- Build Frontend ---
       - name: Build and push Frontend image
         uses: docker/build-push-action@v4
         with:
           # Use the new, clean folder name
-          context: ./CIcdProject/Frontend
+          context: ./Frontend
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-frontend:latest
-          file: ./CIcdProject/Frontend/Dockerfile
+          file: ./Frontend/Dockerfile 
 
   deploy: # <--- CRITICAL FIX: This job must align with 'build-and-push'
     runs-on: self-hosted
