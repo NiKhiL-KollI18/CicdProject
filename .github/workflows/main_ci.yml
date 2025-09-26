@@ -47,11 +47,11 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           # Set the context to the ROOT of the repository
-          context: . 
+          context: ./FrontEnd
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-frontend:latest
           # Specify the full, explicit path from the repository root
-          file: ./FrontEnd/dockerfile # Using the verified all-lowercase filename
+          file: ./FrontEnd/Dockerfile # Using the verified all-lowercase filename
 
   deploy:
     runs-on: self-hosted
