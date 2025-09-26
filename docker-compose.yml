@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./BackEnd
+    ports:
+      - "8082:8082"
+    environment:
+      # Use the database service name 'db' as the host
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/file_storage_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=your_secure_password # <-- Change this
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./FileSharingPlatform_FrontEnd-main
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root # <-- Change this
+      MYSQL_DATABASE: file_storage_db
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
