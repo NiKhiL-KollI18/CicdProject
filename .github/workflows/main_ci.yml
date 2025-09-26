@@ -13,15 +13,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          path: CIcdProject # Repository checked out into this folder
+          # Check out repository into a specific folder to handle paths
+          path: CIcdProject 
 
-      # SECURITY FIX: Use secrets here
+      # --- Login Step (Must be here for security) ---
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           
+      # --- Build Backend ---
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -29,37 +31,37 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      # FIX 1: Update Maven path
       - name: Build with Maven
+        # Path to pom.xml relative to the checked-out folder
         run: mvn -f ./CIcdProject/BackEnd/pom.xml clean install -DskipTests
 
-      # FIX 2: Update Backend context/file paths
       - name: Build and push Backend image
         uses: docker/build-push-action@v4
         with:
+          # Context and file paths relative to the checked-out folder
           context: ./CIcdProject/BackEnd 
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-backend:latest
           file: ./CIcdProject/BackEnd/Dockerfile 
 
-      # FIX 3: Update Frontend context/file paths (already done in your code)
+      # --- Build Frontend ---
       - name: Build and push Frontend image
         uses: docker/build-push-action@v4
         with:
-          context: ./CIcdProject/FileSharingSystem_FrontEnd-main
+          # Correct context for the frontend folder
+          context: ./CIcdProject/FileSharingSystem_FrontEnd-main 
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-frontend:latest
           file: ./CIcdProject/FileSharingSystem_FrontEnd-main/Dockerfile
 
-      # FIX 4: Update deploy paths for the self-hosted runner
-    deploy:
-        runs-on: self-hosted
-        needs: build-and-push
-        steps:
-          - name: Pull and run Docker Compose
-            run: |
-              # The docker-compose file is now inside the CIcdProject folder
-              cd /path/to/your/deployment_root/CIcdProject
-              docker-compose pull
-              docker-compose down
-              docker-compose up -d
+  deploy: # <--- CRITICAL FIX: This job must align with 'build-and-push'
+    runs-on: self-hosted
+    needs: build-and-push
+    steps:
+      - name: Pull and run Docker Compose
+        run: |
+          # The entire repo is checked out into CIcdProject
+          cd /path/to/your/deployment_root/CIcdProject
+          docker-compose pull
+          docker-compose down
+          docker-compose up -d
