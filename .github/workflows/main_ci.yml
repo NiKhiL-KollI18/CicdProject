@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          path: CIcdProject
 
       # SECURITY FIX: Use secrets here
       - name: Log in to Docker Hub
@@ -45,11 +47,11 @@ jobs:
       - name: Build and push Frontend image
         uses: docker/build-push-action@v4
         with:
-          # Use the corrected folder name from your VS Code structure:
-          context: ./FileSharingSystem_FrontEnd-main 
+          # Now, reference the path relative to the repository name set above
+          context: ./CIcdProject/FileSharingSystem_FrontEnd-main
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-frontend:latest
-          file: ./FileSharingSystem_FrontEnd-main/Dockerfile
+          file: ./CIcdProject/FileSharingSystem_FrontEnd-main/Dockerfile
 
   deploy:
     runs-on: self-hosted
