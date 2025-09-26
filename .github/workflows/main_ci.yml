@@ -42,10 +42,12 @@ jobs:
       - name: Build and push Frontend image
         uses: docker/build-push-action@v4
         with:
-          context: ./FileSharingSystem-FrontEnd
+          # CORRECTED CONTEXT PATH
+          context: ./FileSharingSystem_FrontEnd-main 
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-frontend:latest
-          file: ./FileSharingSystem-FrontEnd/Dockerfile
+          # CORRECTED DOCKERFILE PATH
+          file: ./FileSharingSystem_FrontEnd-main/Dockerfile
 
   deploy:
     runs-on: self-hosted
