@@ -48,16 +48,3 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-frontend:latest
            # Path to the all-lowercase Dockerfile (for reliability)
           file: ./FrontEnd/Dockerfile
-
-  deploy:
-    runs-on: self-hosted
-    needs: build-and-push
-    steps:
-      - name: Checkout code on Server
-        uses: actions/checkout@v3
-        
-      - name: Pull and run Docker Compose
-        run: |
-          docker-compose pull
-          docker-compose down
-          docker-compose up -d
