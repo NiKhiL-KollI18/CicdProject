@@ -1,0 +1,32 @@
+.app {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left var(--transition-standard);
+}
+
+.main-content.expanded {
+  margin-left: -180px;
+}
+
+.page-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: var(--spacing-4);
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: -240px;
+  }
+  
+  .main-content.expanded {
+    margin-left: 0;
+  }
+}
