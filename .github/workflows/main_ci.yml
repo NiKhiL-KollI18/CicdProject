@@ -52,7 +52,7 @@ jobs:
           file: ./CIcdProject/FileSharingSystem_FrontEnd-main/Dockerfile
 
       # FIX 4: Update deploy paths for the self-hosted runner
-      deploy:
+    deploy:
         runs-on: self-hosted
         needs: build-and-push
         steps:
