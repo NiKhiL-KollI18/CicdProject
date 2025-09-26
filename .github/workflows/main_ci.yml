@@ -38,7 +38,7 @@ jobs:
           context: ./CIcdProject/BackEnd 
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-backend:latest
-          file: ./CIcdProject/BackEnd/Dockerfile 
+          file: ./BackEnd/Dockerfile 
       
       # --- CRITICAL FIX: RENAME STEP ---
       - name: Simplify Frontend Folder Name
