@@ -1,5 +1,6 @@
 # STAGE 1: Build the application with Maven
-FROM maven:3.8.5-openjdk-21 AS build
+# Use a valid, existing image tag from Docker Hub
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 # Set the working directory
 WORKDIR /app
@@ -30,3 +31,4 @@ EXPOSE 8082
 
 # The command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
