@@ -46,7 +46,7 @@ jobs:
           context: ./FrontEnd # Path to the clean folder name
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filesharing-frontend:latest
-          file: ./FrontEnd/Dockerfile # Path to the all-lowercase Dockerfile (for reliability)
+           # Path to the all-lowercase Dockerfile (for reliability)
 
   deploy:
     runs-on: self-hosted
